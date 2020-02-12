@@ -94,7 +94,7 @@ public class PlaceRest {
 
     @GetMapping(value = "/id/check")
     @ResponseBody
-    public List<Long> checkIds(@RequestBody List<Long> placesIdsForCheck) {
+    public List<Long> getNotExistPlacesIds(@RequestBody List<Long> placesIdsForCheck) {
         log.debug(CONTROLLER_LOG_GET_NOT_EXIST_PLACES_IDS);
         return placeService.getNotExistPlacesIds(placesIdsForCheck);
     }
