@@ -11,11 +11,9 @@ import javax.validation.ConstraintViolationException;
 
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceException;
-import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
-import java.util.stream.Collectors;
 
 import static com.excursions.places.exception.ServiceException.*;
 import static com.excursions.places.log.messages.ServiceLogMessages.*;

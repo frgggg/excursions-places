@@ -19,7 +19,11 @@ import static org.springframework.http.HttpStatus.NOT_IMPLEMENTED;
 @ControllerAdvice
 public class ExceptionController {
 
-    protected static ResponseEntity<String> exceptionControllerStringResponseEntity(Exception reasonException, String message, HttpStatus httpStatus, WebRequest request) {
+    protected static ResponseEntity<String> exceptionControllerStringResponseEntity(
+            Exception reasonException,
+            String message,
+            HttpStatus httpStatus,
+            WebRequest request) {
         log.error(
                 CONTROLLER_EXCEPTION_CONTROLLER_LOG_NEW_ENTITY,
                 reasonException.getClass().getSimpleName(),
