@@ -40,12 +40,6 @@ public class PlaceRest {
         return allPlaces;
     }
 
-    @GetMapping(value = "/id/check")
-    @ResponseBody
-    public List<Long> checkIds(@RequestBody List<Long> placesIdsForCheck) {
-        return placeService.getNotExistPlacesIds(placesIdsForCheck);
-    }
-
     @GetMapping(value = "/{id}")
     @ResponseBody
     public PlaceDto findById(@PathVariable("id") Long id) {
@@ -91,5 +85,18 @@ public class PlaceRest {
         log.debug(CONTROLLER_LOG_DELETE_ENTITY, id);
     }
 
+    @GetMapping(value = "/id")
+    @ResponseBody
+    public List<Long> findAllIds() {
+        log.debug(CONTROLLER_LOG_GET_ALL_ENTITIES_IDS);
+        return placeService.findAllIds();
+    }
+
+    @GetMapping(value = "/id/check")
+    @ResponseBody
+    public List<Long> checkIds(@RequestBody List<Long> placesIdsForCheck) {
+        log.debug(CONTROLLER_LOG_GET_NOT_EXIST_PLACES_IDS);
+        return placeService.getNotExistPlacesIds(placesIdsForCheck);
+    }
 
 }

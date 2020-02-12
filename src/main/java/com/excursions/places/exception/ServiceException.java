@@ -14,6 +14,8 @@ public class ServiceException extends RuntimeException {
     public static final String SERVICE_EXCEPTION_EXIST_ENTITY_FORMAT_STRING = "save/update exist entity";
     public static final String SERVICE_EXCEPTION_NO_ENTITY_WITH_ID_FORMAT_STRING = "no entity with id %d";
 
+    public static final String SERVICE_EXCEPTION_NO_IDS_LIST_FOR_CHECK = "null or empty list of ids for check";
+
     @Getter
     private String serviceName = SERVICE_EXCEPTION_SERVICE_NAME_DEFAULT_VALUE;
 
@@ -43,6 +45,13 @@ public class ServiceException extends RuntimeException {
         return new ServiceException(
                 service,
                 SERVICE_EXCEPTION_EXIST_ENTITY_FORMAT_STRING
+        );
+    }
+
+    public static ServiceException serviceExceptionWrongIdsListForCheck(String service) {
+        return new ServiceException(
+                service,
+                SERVICE_EXCEPTION_NO_IDS_LIST_FOR_CHECK
         );
     }
 

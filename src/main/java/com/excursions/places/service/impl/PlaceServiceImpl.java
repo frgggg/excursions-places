@@ -14,6 +14,7 @@ import javax.persistence.PersistenceException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
 import static com.excursions.places.exception.ServiceException.*;
 import static com.excursions.places.log.messages.ServiceLogMessages.*;
@@ -83,7 +84,20 @@ public class PlaceServiceImpl implements PlaceService {
     }
 
     @Override
+    public List<Long> findAllIds() {
+        log.debug(SERVICE_LOG_GET_ALL_ENTITIES_IDS);
+        return findAll().stream().map(Place::getId).collect(Collectors.toList());
+    }
+
+    @Override
     public List<Long> getNotExistPlacesIds(List<Long> placesIdsForCheck) {
+
+        if(placesIdsForCheck == null) {
+            throw serviceExceptionWrongIdsListForCheck(SERVICE_NAME);
+        } else if(placesIdsForCheck.size() < 1) {
+            throw serviceExceptionWrongIdsListForCheck(SERVICE_NAME);
+        }
+
         List<Long> existPlacesIds = findAllIds();
         List<Long> notExistPlacesIds = new ArrayList<>();
 
@@ -93,6 +107,7 @@ public class PlaceServiceImpl implements PlaceService {
             }
         }
 
+        log.debug(SERVICE_LOG_GET_NOT_EXIST_PLACES_IDS);
         return notExistPlacesIds;
     }
 

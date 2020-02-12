@@ -45,5 +45,6 @@ public interface PlaceService {
     )
     void deleteById(Long id);
 
+    List<Long> findAllIds();
     List<Long> getNotExistPlacesIds(List<Long> placesIdsForCheck);
 }
