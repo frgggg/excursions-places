@@ -15,7 +15,7 @@ apply plugin: 'io.spring.dependency-management'
 bootJar {
     baseName = 'PlacesApplication'
     group 'excursions-group'
-    mainClassName = 'com.excursions.places.ExcursionsProductsApplication'
+    mainClassName = 'com.excursions.places.PlacesApplication'
     version =  '1.0-SNAPSHOT'
 }
 
