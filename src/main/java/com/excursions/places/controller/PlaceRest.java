@@ -41,11 +41,10 @@ public class PlaceRest {
         return allPlaces;
     }
 
-    @GetMapping(value = "/id")
+    @GetMapping(value = "/id/check")
     @ResponseBody
-    public List<Long> findAllIds() {
-        log.debug(CONTROLLER_LOG_GET_ALL_ENTITIES_IDS);
-        return placeService.findAllIds();
+    public List<Long> checkIds(@RequestBody List<Long> placesIdsForCheck) {
+        return placeService.getNotExistPlacesIds(placesIdsForCheck);
     }
 
     @GetMapping(value = "/{id}")
@@ -93,13 +92,5 @@ public class PlaceRest {
         log.debug(CONTROLLER_LOG_DELETE_ENTITY, id);
     }
 
-    @GetMapping(value = "/last-change-time")
-    @ResponseStatus(HttpStatus.OK)
-    @ResponseBody
-    public LocalDateTime getLastChangeTime() {
-        LocalDateTime lastChangeTime = placeService.getLastChangeTime();
-        log.debug(CONTROLLER_LOG_GET_CHANGE_TIME, lastChangeTime);
-        return lastChangeTime;
-    }
 
 }

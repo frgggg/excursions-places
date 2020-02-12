@@ -1,18 +1,11 @@
 package com.excursions.places.service.impl;
 
-import com.excursions.places.exception.ServiceException;
 import com.excursions.places.model.Place;
 import com.excursions.places.repository.PlaceRepository;
 import com.excursions.places.service.PlaceService;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.cache.annotation.CacheEvict;
-import org.springframework.cache.annotation.CachePut;
-import org.springframework.cache.annotation.Cacheable;
-import org.springframework.cache.annotation.Caching;
 import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Isolation;
-import org.springframework.transaction.annotation.Transactional;
 
 import javax.validation.ConstraintViolationException;
 
@@ -36,21 +29,16 @@ public class PlaceServiceImpl implements PlaceService {
     private PlaceRepository placeRepository;
     private EntityManager entityManager;
 
-    private LocalDateTime lastChangeTime;
-
     @Autowired
     protected PlaceServiceImpl(PlaceRepository placeRepository, EntityManager entityManager) {
         this.placeRepository = placeRepository;
         this.entityManager = entityManager;
-        setLastChangeTimeToNow();
     }
 
     @Override
     public Place create(String name, String address, String info) {
         Place placeForSave = new Place(name, address, info);
         Place savedPlace = saveUtil(placeForSave);
-
-        setLastChangeTimeToNow();
 
         log.debug(SERVICE_LOG_NEW_ENTITY, savedPlace);
         return savedPlace;
@@ -63,8 +51,6 @@ public class PlaceServiceImpl implements PlaceService {
         placeForUpdate.setAddress(address);
         placeForUpdate.setInfo(info);
         Place updatedPlace = saveUtil(placeForUpdate);
-
-        setLastChangeTimeToNow();
 
         log.debug(SERVICE_LOG_UPDATE_ENTITY, id, updatedPlace);
         return updatedPlace;
@@ -91,28 +77,25 @@ public class PlaceServiceImpl implements PlaceService {
     }
 
     @Override
-    public List<Long> findAllIds() {
-        return findAll().stream().map(Place::getId).collect(Collectors.toList());
-    }
-
-    @Override
     public void deleteById(Long id) {
         Place placeForDelete = findById(id);
         placeRepository.delete(placeForDelete);
-        setLastChangeTimeToNow();
 
         log.debug(SERVICE_LOG_DELETE_ENTITY, id);
     }
 
     @Override
-    public LocalDateTime getLastChangeTime() {
-        log.debug(SERVICE_LOG_GET_CHANGE_TIME, lastChangeTime);
-        return lastChangeTime;
-    }
+    public List<Long> getNotExistPlacesIds(List<Long> placesIdsForCheck) {
+        List<Long> existPlacesIds = findAllIds();
+        List<Long> notExistPlacesIds = new ArrayList<>();
 
-    private void setLastChangeTimeToNow() {
-        lastChangeTime = LocalDateTime.now();
-        log.debug(SERVICE_LOG_CHANGE, lastChangeTime);
+        for(Long placeIdForCheck: placesIdsForCheck) {
+            if(!existPlacesIds.contains(placeIdForCheck)) {
+                notExistPlacesIds.add(placeIdForCheck);
+            }
+        }
+
+        return notExistPlacesIds;
     }
 
     private Place saveUtil(Place placeForSave) {

@@ -37,8 +37,6 @@ public interface PlaceService {
     @Cacheable(value= PLACES_CACHE_NAME, unless= "#result.size() == 0")
     List<Place> findAll();
 
-    List<Long> findAllIds();
-
     @Caching(
             evict= {
                     @CacheEvict(value= PLACE_CACHE_NAME, key= "#id"),
@@ -47,5 +45,5 @@ public interface PlaceService {
     )
     void deleteById(Long id);
 
-    LocalDateTime getLastChangeTime();
+    List<Long> getNotExistPlacesIds(List<Long> placesIdsForCheck);
 }
