@@ -1,4 +1,4 @@
-package com.excursions.places.model.util;
+package com.excursions.places.validation.message;
 
 public class ValidationMessages {
     public static final String STRING_FIELD_NOTNULL_MIN_MAX = " must exist and have size ";
