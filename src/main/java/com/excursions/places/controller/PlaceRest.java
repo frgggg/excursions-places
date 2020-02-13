@@ -10,6 +10,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
+import java.time.LocalDateTime;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -97,6 +98,13 @@ public class PlaceRest {
     public List<Long> getNotExistPlacesIds(@RequestBody List<Long> placesIdsForCheck) {
         log.debug(CONTROLLER_LOG_GET_NOT_EXIST_PLACES_IDS);
         return placeService.getNotExistPlacesIds(placesIdsForCheck);
+    }
+
+    @GetMapping(value = "/last-modification-time")
+    @ResponseBody
+    public LocalDateTime getLastModificationTime() {
+        log.debug(CONTROLLER_LOG_GET_LAST_MODIFICATION_TIME);
+        return placeService.getLastModificationTime();
     }
 
 }
