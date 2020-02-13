@@ -93,9 +93,16 @@ public class PlaceRest {
         return placeService.findAllIds();
     }
 
-    @GetMapping(value = "/check")
+    /*@GetMapping(value = "/check")
     @ResponseBody
     public List<Long> getNotExistPlacesIds(@RequestBody List<Long> placesIdsForCheck) {
+        log.debug(CONTROLLER_LOG_GET_NOT_EXIST_PLACES_IDS);
+        return placeService.getNotExistPlacesIds(placesIdsForCheck);
+    }*/
+
+    @GetMapping(value = "/check")
+    @ResponseBody
+    public List<Long> getNotExistPlacesIds(@RequestParam(name = "places-ids-for-check") List<Long> placesIdsForCheck) {
         log.debug(CONTROLLER_LOG_GET_NOT_EXIST_PLACES_IDS);
         return placeService.getNotExistPlacesIds(placesIdsForCheck);
     }
