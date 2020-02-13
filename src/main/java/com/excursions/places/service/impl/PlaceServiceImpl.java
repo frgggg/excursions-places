@@ -12,9 +12,7 @@ import javax.validation.ConstraintViolationException;
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceException;
 import java.time.LocalDateTime;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Optional;
+import java.util.*;
 import java.util.stream.Collectors;
 
 import static com.excursions.places.exception.ServiceException.*;
@@ -107,7 +105,7 @@ public class PlaceServiceImpl implements PlaceService {
         }
 
         List<Long> existPlacesIds = findAllIds();
-        List<Long> notExistPlacesIds = new ArrayList<>();
+        HashSet<Long> notExistPlacesIds = new HashSet<>();
 
         for(Long placeIdForCheck: placesIdsForCheck) {
             if(!existPlacesIds.contains(placeIdForCheck)) {
@@ -116,7 +114,7 @@ public class PlaceServiceImpl implements PlaceService {
         }
 
         log.debug(SERVICE_LOG_GET_NOT_EXIST_PLACES_IDS);
-        return notExistPlacesIds;
+        return new ArrayList<>(notExistPlacesIds);
     }
 
     @Override
