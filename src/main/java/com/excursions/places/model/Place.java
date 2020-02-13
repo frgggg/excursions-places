@@ -6,8 +6,8 @@ import javax.persistence.*;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
 
-import static com.excursions.places.validation.message.ValidationMessages.STRING_FIELD_NOTNULL_MIN_MAX;
-import static com.excursions.places.validation.message.ValidationMessages.STRING_FIELD_NOTNULL_MIN_MAX_DIVIDE;
+import static com.excursions.places.validation.message.ValidationMessagesComponents.STRING_FIELD_NOTNULL_MIN_MAX;
+import static com.excursions.places.validation.message.ValidationMessagesComponents.STRING_FIELD_NOTNULL_MIN_MAX_DIVIDE;
 
 @Data
 @Entity
