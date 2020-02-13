@@ -9,6 +9,7 @@ import org.springframework.web.HttpRequestMethodNotSupportedException;
 import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;
+import org.springframework.web.context.request.ServletWebRequest;
 import org.springframework.web.context.request.WebRequest;
 
 import static com.excursions.places.log.messages.ControllerLogMessages.CONTROLLER_EXCEPTION_CONTROLLER_LOG_NEW_ENTITY;
@@ -28,7 +29,7 @@ public class ExceptionController {
                 CONTROLLER_EXCEPTION_CONTROLLER_LOG_NEW_ENTITY,
                 reasonException.getClass().getSimpleName(),
                 message,
-                request.getContextPath()
+                ((ServletWebRequest)request).getRequest().getRequestURI().toString()
         );
 
         return new ResponseEntity<>(message, httpStatus);
