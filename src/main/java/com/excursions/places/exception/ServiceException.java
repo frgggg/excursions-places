@@ -14,7 +14,7 @@ public class ServiceException extends RuntimeException {
     public static final String SERVICE_EXCEPTION_EXIST_ENTITY_FORMAT_STRING = "save/update exist entity";
     public static final String SERVICE_EXCEPTION_NO_ENTITY_WITH_ID_FORMAT_STRING = "no entity with id %d";
 
-    public static final String SERVICE_EXCEPTION_NO_IDS_LIST_FOR_CHECK = "null or empty list of ids for check";
+    public static final String SERVICE_EXCEPTION_WRONG_INPUT_ARGS = "%s - wrong input args";
 
     @Getter
     private String serviceName = SERVICE_EXCEPTION_SERVICE_NAME_DEFAULT_VALUE;
@@ -48,10 +48,10 @@ public class ServiceException extends RuntimeException {
         );
     }
 
-    public static ServiceException serviceExceptionWrongIdsListForCheck(String service) {
+    public static ServiceException serviceExceptionWrongInputArgs(String service, String methodInfo) {
         return new ServiceException(
                 service,
-                SERVICE_EXCEPTION_NO_IDS_LIST_FOR_CHECK
+                String.format(SERVICE_EXCEPTION_WRONG_INPUT_ARGS, methodInfo)
         );
     }
 

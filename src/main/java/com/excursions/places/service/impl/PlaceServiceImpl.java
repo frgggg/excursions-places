@@ -99,9 +99,9 @@ public class PlaceServiceImpl implements PlaceService {
     public List<Long> getNotExistPlacesIds(List<Long> placesIdsForCheck) {
 
         if(placesIdsForCheck == null) {
-            throw serviceExceptionWrongIdsListForCheck(SERVICE_NAME);
+            throw serviceExceptionWrongInputArgs(SERVICE_NAME, SERVICE_LOG_GET_NOT_EXIST_ENTITIES_IDS);
         } else if(placesIdsForCheck.size() < 1) {
-            throw serviceExceptionWrongIdsListForCheck(SERVICE_NAME);
+            throw serviceExceptionWrongInputArgs(SERVICE_NAME, SERVICE_LOG_GET_NOT_EXIST_ENTITIES_IDS);
         }
 
         List<Long> existPlacesIds = findAllIds();
