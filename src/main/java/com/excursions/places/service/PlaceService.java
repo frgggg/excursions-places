@@ -47,5 +47,4 @@ public interface PlaceService {
 
     List<Long> findAllIds();
     List<Long> getNotExistPlacesIds(List<Long> placesIdsForCheck);
-    LocalDateTime getLastModificationTime();
 }

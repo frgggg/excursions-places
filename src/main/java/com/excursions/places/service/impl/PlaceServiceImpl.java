@@ -37,8 +37,6 @@ public class PlaceServiceImpl implements PlaceService {
         this.placeRepository = placeRepository;
         this.entityManager = entityManager;
         this.placeServiceImpl = placeServiceImpl;
-
-        setLastModificationTime();
     }
 
     @Override
@@ -47,7 +45,6 @@ public class PlaceServiceImpl implements PlaceService {
         Place savedPlace = saveUtil(placeForSave);
 
         log.debug(SERVICE_LOG_NEW_ENTITY, savedPlace);
-        setLastModificationTime();
         return savedPlace;
     }
 
@@ -60,7 +57,6 @@ public class PlaceServiceImpl implements PlaceService {
         Place updatedPlace = saveUtil(placeForUpdate);
 
         log.debug(SERVICE_LOG_UPDATE_ENTITY, id, updatedPlace);
-        setLastModificationTime();
         return updatedPlace;
     }
 
@@ -90,7 +86,6 @@ public class PlaceServiceImpl implements PlaceService {
         placeRepository.delete(placeForDelete);
 
         log.debug(SERVICE_LOG_DELETE_ENTITY, id);
-        setLastModificationTime();
     }
 
     @Override
@@ -119,17 +114,6 @@ public class PlaceServiceImpl implements PlaceService {
 
         log.debug(SERVICE_LOG_GET_NOT_EXIST_ENTITIES_IDS);
         return new ArrayList<>(notExistPlacesIds);
-    }
-
-    @Override
-    public LocalDateTime getLastModificationTime() {
-        log.debug(SERVICE_LOG_GET_LAST_MODIFICATION_TIME);
-        return lastModificationTime;
-    }
-
-    private void setLastModificationTime() {
-        lastModificationTime = LocalDateTime.now();
-        log.debug(SERVICE_LOG_SET_LAST_MODIFICATION_TIME);
     }
 
     private Place saveUtil(Place placeForSave) {

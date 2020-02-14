@@ -100,11 +100,4 @@ public class PlaceRest {
         return placeService.getNotExistPlacesIds(placesIdsForCheck);
     }
 
-    @GetMapping(value = "/last-modification-time")
-    @ResponseBody
-    public LocalDateTime getLastModificationTime() {
-        log.debug(CONTROLLER_LOG_GET_LAST_MODIFICATION_TIME);
-        return placeService.getLastModificationTime();
-    }
-
 }
