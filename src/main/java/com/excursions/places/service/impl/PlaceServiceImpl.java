@@ -113,7 +113,7 @@ public class PlaceServiceImpl implements PlaceService {
             }
         }
 
-        log.debug(SERVICE_LOG_GET_NOT_EXIST_PLACES_IDS);
+        log.debug(SERVICE_LOG_GET_NOT_EXIST_ENTITIES_IDS);
         return new ArrayList<>(notExistPlacesIds);
     }
 
