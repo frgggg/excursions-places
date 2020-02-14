@@ -5,6 +5,7 @@ import com.excursions.places.repository.PlaceRepository;
 import com.excursions.places.service.PlaceService;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.annotation.Lazy;
 import org.springframework.stereotype.Service;
 
 import javax.validation.ConstraintViolationException;
@@ -26,13 +27,16 @@ public class PlaceServiceImpl implements PlaceService {
 
     private PlaceRepository placeRepository;
     private EntityManager entityManager;
+    private PlaceServiceImpl placeServiceImpl;
 
     private LocalDateTime lastModificationTime;
 
+    @Lazy
     @Autowired
-    protected PlaceServiceImpl(PlaceRepository placeRepository, EntityManager entityManager) {
+    protected PlaceServiceImpl(PlaceRepository placeRepository, EntityManager entityManager, PlaceServiceImpl placeServiceImpl) {
         this.placeRepository = placeRepository;
         this.entityManager = entityManager;
+        this.placeServiceImpl = placeServiceImpl;
 
         setLastModificationTime();
     }
@@ -92,7 +96,7 @@ public class PlaceServiceImpl implements PlaceService {
     @Override
     public List<Long> findAllIds() {
         log.debug(SERVICE_LOG_GET_ALL_ENTITIES_IDS);
-        return findAll().stream().map(Place::getId).collect(Collectors.toList());
+        return placeServiceImpl.findAll().stream().map(Place::getId).collect(Collectors.toList());
     }
 
     @Override
