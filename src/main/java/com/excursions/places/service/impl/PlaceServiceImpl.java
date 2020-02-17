@@ -1,5 +1,6 @@
 package com.excursions.places.service.impl;
 
+import com.excursions.places.exception.ServiceException;
 import com.excursions.places.model.Place;
 import com.excursions.places.repository.PlaceRepository;
 import com.excursions.places.service.PlaceService;
@@ -16,8 +17,8 @@ import java.time.LocalDateTime;
 import java.util.*;
 import java.util.stream.Collectors;
 
-import static com.excursions.places.exception.ServiceException.*;
-import static com.excursions.places.log.messages.ServiceLogMessages.*;
+import static com.excursions.places.exception.message.PlaceServiceExceptionMessages.*;
+import static com.excursions.places.log.message.PlaceServiceLogMessages.*;
 
 @Service
 @Slf4j
@@ -44,7 +45,7 @@ public class PlaceServiceImpl implements PlaceService {
         Place placeForSave = new Place(name, address, info);
         Place savedPlace = saveUtil(placeForSave);
 
-        log.debug(SERVICE_LOG_NEW_ENTITY, savedPlace);
+        log.debug(PLACE_SERVICE_LOG_NEW_PLACE, savedPlace);
         return savedPlace;
     }
 
@@ -56,7 +57,7 @@ public class PlaceServiceImpl implements PlaceService {
         placeForUpdate.setInfo(info);
         Place updatedPlace = saveUtil(placeForUpdate);
 
-        log.debug(SERVICE_LOG_UPDATE_ENTITY, id, updatedPlace);
+        log.debug(PLACE_SERVICE_LOG_UPDATE_PLACE, placeForUpdate, updatedPlace);
         return updatedPlace;
     }
 
@@ -64,11 +65,12 @@ public class PlaceServiceImpl implements PlaceService {
     public Place findById(Long id) {
         Optional<Place> optionalPlace = placeRepository.findById(id);
         if(!optionalPlace.isPresent()) {
-            throw serviceExceptionNoEntityWithId(SERVICE_NAME, id);
+            throw new ServiceException(SERVICE_NAME, String.format(PLACE_SERVICE_EXCEPTION_NOT_EXIST_PLACE, id));
         }
 
-        log.debug(SERVICE_LOG_GET_ENTITY, id);
-        return optionalPlace.get();
+        Place findByIdPlace = optionalPlace.get();
+        log.debug(PLACE_SERVICE_LOG_GET_PLACE, findByIdPlace);
+        return findByIdPlace;
     }
 
     @Override
@@ -76,7 +78,7 @@ public class PlaceServiceImpl implements PlaceService {
         List<Place> places = new ArrayList<>();
         placeRepository.findAll().forEach(places::add);
 
-        log.debug(SERVICE_LOG_GET_ALL_ENTITIES);
+        log.debug(PLACE_SERVICE_LOG_GET_ALL_PLACES);
         return places;
     }
 
@@ -85,12 +87,12 @@ public class PlaceServiceImpl implements PlaceService {
         Place placeForDelete = findById(id);
         placeRepository.delete(placeForDelete);
 
-        log.debug(SERVICE_LOG_DELETE_ENTITY, id);
+        log.debug(PLACE_SERVICE_LOG_DELETE_PLACE, placeForDelete);
     }
 
     @Override
     public List<Long> findAllIds() {
-        log.debug(SERVICE_LOG_GET_ALL_ENTITIES_IDS);
+        log.debug(PLACE_SERVICE_LOG_GET_ALL_PLACES_IDS);
         return placeServiceImpl.findAll().stream().map(Place::getId).collect(Collectors.toList());
     }
 
@@ -98,9 +100,9 @@ public class PlaceServiceImpl implements PlaceService {
     public List<Long> getNotExistPlacesIds(List<Long> placesIdsForCheck) {
 
         if(placesIdsForCheck == null) {
-            throw serviceExceptionWrongInputArgs(SERVICE_NAME, SERVICE_LOG_GET_NOT_EXIST_ENTITIES_IDS);
+            throw new ServiceException(SERVICE_NAME, PLACE_SERVICE_EXCEPTION_NULL_OR_EMPTY_PLACES_IDS_LIST_FOR_CHECK);
         } else if(placesIdsForCheck.size() < 1) {
-            throw serviceExceptionWrongInputArgs(SERVICE_NAME, SERVICE_LOG_GET_NOT_EXIST_ENTITIES_IDS);
+            throw new ServiceException(SERVICE_NAME, PLACE_SERVICE_EXCEPTION_NULL_OR_EMPTY_PLACES_IDS_LIST_FOR_CHECK);
         }
 
         List<Long> existPlacesIds = findAllIds();
@@ -112,7 +114,7 @@ public class PlaceServiceImpl implements PlaceService {
             }
         }
 
-        log.debug(SERVICE_LOG_GET_NOT_EXIST_ENTITIES_IDS);
+        log.debug(PLACE_SERVICE_LOG_GET_NOT_EXIST_PLACES_IDS);
         return new ArrayList<>(notExistPlacesIds);
     }
 
@@ -122,9 +124,9 @@ public class PlaceServiceImpl implements PlaceService {
             savedPlace = placeRepository.save(placeForSave);
             entityManager.flush();
         } catch (ConstraintViolationException e) {
-            throw serviceExceptionWrongEntity(SERVICE_NAME, e.getConstraintViolations().iterator().next().getMessage());
+            throw new ServiceException(SERVICE_NAME, e.getConstraintViolations().iterator().next().getMessage());
         } catch (PersistenceException e) {
-            throw serviceExceptionExistEntity(SERVICE_NAME);
+            throw new ServiceException(SERVICE_NAME, PLACE_SERVICE_EXCEPTION_SAVE_OR_UPDATE_EXIST_PLACE);
         }
 
         return savedPlace;

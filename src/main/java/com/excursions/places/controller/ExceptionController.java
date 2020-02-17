@@ -12,7 +12,7 @@ import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.context.request.ServletWebRequest;
 import org.springframework.web.context.request.WebRequest;
 
-import static com.excursions.places.log.messages.ControllerLogMessages.CONTROLLER_EXCEPTION_CONTROLLER_LOG_NEW_ENTITY;
+import static com.excursions.places.log.message.ExceptionControllerLogMessages.EXCEPTION_CONTROLLER_LOG;
 import static org.springframework.http.HttpStatus.BAD_REQUEST;
 import static org.springframework.http.HttpStatus.NOT_IMPLEMENTED;
 
@@ -26,7 +26,7 @@ public class ExceptionController {
             HttpStatus httpStatus,
             WebRequest request) {
         log.error(
-                CONTROLLER_EXCEPTION_CONTROLLER_LOG_NEW_ENTITY,
+                EXCEPTION_CONTROLLER_LOG,
                 reasonException.getClass().getSimpleName(),
                 message,
                 ((ServletWebRequest)request).getRequest().getRequestURI().toString()

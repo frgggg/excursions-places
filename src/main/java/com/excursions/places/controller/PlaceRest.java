@@ -10,11 +10,10 @@ import org.springframework.http.HttpStatus;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
-import java.time.LocalDateTime;
 import java.util.List;
 import java.util.stream.Collectors;
 
-import static com.excursions.places.log.messages.ControllerLogMessages.*;
+import static com.excursions.places.log.message.PlaceControllerLogMessages.*;
 
 @Slf4j
 @RestController
@@ -37,7 +36,7 @@ public class PlaceRest {
                 .stream()
                 .map(book -> modelMapper.map(book, PlaceDto.class))
                 .collect(Collectors.toList());
-        log.debug(CONTROLLER_LOG_GET_ALL_ENTITIES);
+        log.debug(PLACE_CONTROLLER_LOG_GET_ALL_PLACES);
         return allPlaces;
     }
 
@@ -46,7 +45,7 @@ public class PlaceRest {
     public PlaceDto findById(@PathVariable("id") Long id) {
         Place place = placeService.findById(id);
         PlaceDto fundedPlace =  modelMapper.map(place, PlaceDto.class);
-        log.debug(CONTROLLER_LOG_GET_ENTITY, id);
+        log.debug(PLACE_CONTROLLER_LOG_GET_PLACE, id);
         return fundedPlace;
     }
 
@@ -61,7 +60,7 @@ public class PlaceRest {
         );
 
         PlaceDto createPlace = modelMapper.map(place, PlaceDto.class);
-        log.debug(CONTROLLER_LOG_NEW_ENTITY, createPlace);
+        log.debug(PLACE_CONTROLLER_LOG_NEW_PLACE, createPlace);
         return createPlace;
     }
 
@@ -76,27 +75,27 @@ public class PlaceRest {
                 placeDto.getInfo()
         );
         PlaceDto updatedPlace = modelMapper.map(place, PlaceDto.class);
-        log.debug(CONTROLLER_LOG_UPDATE_ENTITY, id, updatedPlace);
+        log.debug(PLACE_CONTROLLER_LOG_UPDATE_PLACE, id, updatedPlace);
         return updatedPlace;
     }
 
     @DeleteMapping(value = "/{id}")
     public void delete(@PathVariable("id") Long id) {
         placeService.deleteById(id);
-        log.debug(CONTROLLER_LOG_DELETE_ENTITY, id);
+        log.debug(PLACE_CONTROLLER_LOG_DELETE_PLACE, id);
     }
 
     @GetMapping(value = "/id")
     @ResponseBody
     public List<Long> findAllIds() {
-        log.debug(CONTROLLER_LOG_GET_ALL_ENTITIES_IDS);
+        log.debug(PLACE_CONTROLLER_LOG_GET_ALL_PLACES_IDS);
         return placeService.findAllIds();
     }
 
     @GetMapping(value = "/check")
     @ResponseBody
     public List<Long> getNotExistPlacesIds(@RequestParam(name = "places-ids-for-check") List<Long> placesIdsForCheck) {
-        log.debug(CONTROLLER_LOG_GET_NOT_EXIST_ENTITIES_IDS);
+        log.debug(PLACE_CONTROLLER_LOG_GET_NOT_EXIST_PLACES_IDS);
         return placeService.getNotExistPlacesIds(placesIdsForCheck);
     }
 
