@@ -28,22 +28,22 @@ public class PlaceServiceImpl implements PlaceService {
 
     private PlaceRepository placeRepository;
     private EntityManager entityManager;
-    private PlaceServiceImpl placeServiceImpl;
+    private PlaceServiceImpl self;
 
     private LocalDateTime lastModificationTime;
 
     @Lazy
     @Autowired
-    protected PlaceServiceImpl(PlaceRepository placeRepository, EntityManager entityManager, PlaceServiceImpl placeServiceImpl) {
+    protected PlaceServiceImpl(PlaceRepository placeRepository, EntityManager entityManager, PlaceServiceImpl self) {
         this.placeRepository = placeRepository;
         this.entityManager = entityManager;
-        this.placeServiceImpl = placeServiceImpl;
+        this.self = self;
     }
 
     @Override
     public Place create(String name, String address, String info) {
         Place placeForSave = new Place(name, address, info);
-        Place savedPlace = saveUtil(placeForSave);
+        Place savedPlace = self.saveUtil(placeForSave);
 
         log.debug(PLACE_SERVICE_LOG_NEW_PLACE, savedPlace);
         return savedPlace;
@@ -55,7 +55,7 @@ public class PlaceServiceImpl implements PlaceService {
         placeForUpdate.setName(name);
         placeForUpdate.setAddress(address);
         placeForUpdate.setInfo(info);
-        Place updatedPlace = saveUtil(placeForUpdate);
+        Place updatedPlace = self.saveUtil(placeForUpdate);
 
         log.debug(PLACE_SERVICE_LOG_UPDATE_PLACE, placeForUpdate, updatedPlace);
         return updatedPlace;
@@ -93,7 +93,7 @@ public class PlaceServiceImpl implements PlaceService {
     @Override
     public List<Long> findAllIds() {
         log.debug(PLACE_SERVICE_LOG_GET_ALL_PLACES_IDS);
-        return placeServiceImpl.findAll().stream().map(Place::getId).collect(Collectors.toList());
+        return self.findAll().stream().map(Place::getId).collect(Collectors.toList());
     }
 
     @Override
