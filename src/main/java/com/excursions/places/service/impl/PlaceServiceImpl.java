@@ -13,6 +13,7 @@ import javax.validation.ConstraintViolationException;
 
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceException;
+import java.time.LocalDateTime;
 import java.util.*;
 import java.util.stream.Collectors;
 
@@ -27,14 +28,16 @@ public class PlaceServiceImpl implements PlaceService {
 
     private PlaceRepository placeRepository;
     private EntityManager entityManager;
-    private PlaceServiceImpl self;
+    private PlaceServiceImpl placeServiceImpl;
+
+    private LocalDateTime lastModificationTime;
 
     @Lazy
     @Autowired
-    protected PlaceServiceImpl(PlaceRepository placeRepository, EntityManager entityManager, PlaceServiceImpl self) {
+    protected PlaceServiceImpl(PlaceRepository placeRepository, EntityManager entityManager, PlaceServiceImpl placeServiceImpl) {
         this.placeRepository = placeRepository;
         this.entityManager = entityManager;
-        this.self = self;
+        this.placeServiceImpl = placeServiceImpl;
     }
 
     @Override
@@ -48,7 +51,7 @@ public class PlaceServiceImpl implements PlaceService {
 
     @Override
     public Place update(Long id, String name, String address, String info) {
-        Place placeForUpdate = self.findById(id);
+        Place placeForUpdate = findById(id);
         placeForUpdate.setName(name);
         placeForUpdate.setAddress(address);
         placeForUpdate.setInfo(info);
@@ -81,7 +84,7 @@ public class PlaceServiceImpl implements PlaceService {
 
     @Override
     public void deleteById(Long id) {
-        Place placeForDelete = self.findById(id);
+        Place placeForDelete = findById(id);
         placeRepository.delete(placeForDelete);
 
         log.debug(PLACE_SERVICE_LOG_DELETE_PLACE, placeForDelete);
@@ -90,7 +93,7 @@ public class PlaceServiceImpl implements PlaceService {
     @Override
     public List<Long> findAllIds() {
         log.debug(PLACE_SERVICE_LOG_GET_ALL_PLACES_IDS);
-        return self.findAll().stream().map(Place::getId).collect(Collectors.toList());
+        return placeServiceImpl.findAll().stream().map(Place::getId).collect(Collectors.toList());
     }
 
     @Override
