@@ -39,9 +39,7 @@ public class PlaceServiceImpl implements PlaceService {
 
     @Override
     public Place create(String name, String address, String info) {
-        Place placeForSave = new Place(name, address, info);
-        Place savedPlace = saveUtil(placeForSave);
-
+        Place savedPlace = saveUtil(null, name, address, info);
         log.debug(PLACE_SERVICE_LOG_NEW_PLACE, savedPlace);
         return savedPlace;
     }
@@ -49,10 +47,7 @@ public class PlaceServiceImpl implements PlaceService {
     @Override
     public Place update(Long id, String name, String address, String info) {
         Place placeForUpdate = self.findById(id);
-        placeForUpdate.setName(name);
-        placeForUpdate.setAddress(address);
-        placeForUpdate.setInfo(info);
-        Place updatedPlace = saveUtil(placeForUpdate);
+        Place updatedPlace = saveUtil(id, name, address, info);
 
         log.debug(PLACE_SERVICE_LOG_UPDATE_PLACE, placeForUpdate, updatedPlace);
         return updatedPlace;
@@ -115,7 +110,12 @@ public class PlaceServiceImpl implements PlaceService {
         return new ArrayList<>(notExistPlacesIds);
     }
 
-    private Place saveUtil(Place placeForSave) {
+    private Place saveUtil(Long id, String name, String address, String info) {
+        Place placeForSave = new Place(name, address, info);
+        if(id != null) {
+            placeForSave.setId(id);
+        }
+
         Place savedPlace;
         try {
             savedPlace = placeRepository.save(placeForSave);

@@ -21,5 +21,4 @@ public class ServiceException extends RuntimeException {
         }
         log.error(SERVICE_EXCEPTION_LOG, serviceName, message);
     }
-
 }
