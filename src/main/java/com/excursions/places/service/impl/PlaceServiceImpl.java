@@ -6,8 +6,14 @@ import com.excursions.places.repository.PlaceRepository;
 import com.excursions.places.service.PlaceService;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.cache.annotation.CacheEvict;
+import org.springframework.cache.annotation.CachePut;
+import org.springframework.cache.annotation.Cacheable;
+import org.springframework.cache.annotation.Caching;
 import org.springframework.context.annotation.Lazy;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Isolation;
+import org.springframework.transaction.annotation.Transactional;
 
 import javax.validation.ConstraintViolationException;
 
@@ -25,6 +31,9 @@ public class PlaceServiceImpl implements PlaceService {
 
     public static final String SERVICE_NAME = "PlaceServiceImpl";
 
+    private final String PLACE_CACHE_NAME = "placeCache";
+    private final String PLACES_CACHE_NAME = "placesCache";
+
     private PlaceRepository placeRepository;
     private EntityManager entityManager;
     private PlaceServiceImpl self;
@@ -37,6 +46,11 @@ public class PlaceServiceImpl implements PlaceService {
         this.self = self;
     }
 
+    @Transactional(isolation = Isolation.SERIALIZABLE, rollbackFor = ServiceException.class)
+    @Caching(
+            put= { @CachePut(value= PLACE_CACHE_NAME, key= "#result.id") },
+            evict= { @CacheEvict(value= PLACES_CACHE_NAME, allEntries= true) }
+    )
     @Override
     public Place create(String name, String address, String info) {
         Place savedPlace = saveUtil(null, name, address, info);
@@ -44,6 +58,11 @@ public class PlaceServiceImpl implements PlaceService {
         return savedPlace;
     }
 
+    @Transactional(isolation = Isolation.SERIALIZABLE, rollbackFor = ServiceException.class)
+    @Caching(
+            put= { @CachePut(value= PLACE_CACHE_NAME, key= "#result.id") },
+            evict= { @CacheEvict(value= PLACES_CACHE_NAME, allEntries= true) }
+    )
     @Override
     public Place update(Long id, String name, String address, String info) {
         Place placeForUpdate = self.findById(id);
@@ -53,6 +72,7 @@ public class PlaceServiceImpl implements PlaceService {
         return updatedPlace;
     }
 
+    @Cacheable(value = PLACE_CACHE_NAME, key = "#id")
     @Override
     public Place findById(Long id) {
         Optional<Place> optionalPlace = placeRepository.findById(id);
@@ -65,6 +85,7 @@ public class PlaceServiceImpl implements PlaceService {
         return findByIdPlace;
     }
 
+    @Cacheable(value= PLACES_CACHE_NAME, unless= "#result.size() == 0")
     @Override
     public List<Place> findAll() {
         List<Place> places = new ArrayList<>();
@@ -74,6 +95,12 @@ public class PlaceServiceImpl implements PlaceService {
         return places;
     }
 
+    @Caching(
+            evict= {
+                    @CacheEvict(value= PLACE_CACHE_NAME, key= "#id"),
+                    @CacheEvict(value= PLACES_CACHE_NAME, allEntries= true)
+            }
+    )
     @Override
     public void deleteById(Long id) {
         Place placeForDelete = self.findById(id);

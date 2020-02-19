@@ -30,7 +30,6 @@ public class PlaceRest {
     }
 
     @GetMapping
-    @ResponseBody
     public List<PlaceDto> findAll() {
         List<PlaceDto> allPlaces =  placeService.findAll()
                 .stream()
@@ -41,7 +40,6 @@ public class PlaceRest {
     }
 
     @GetMapping(value = "/{id}")
-    @ResponseBody
     public PlaceDto findById(@PathVariable("id") Long id) {
         Place place = placeService.findById(id);
         PlaceDto fundedPlace =  modelMapper.map(place, PlaceDto.class);
@@ -51,7 +49,6 @@ public class PlaceRest {
 
     @PostMapping
     @ResponseStatus(HttpStatus.CREATED)
-    @ResponseBody
     public PlaceDto create(@Validated @RequestBody PlaceDto placeDto) {
         Place place = placeService.create(
                 placeDto.getName(),
@@ -66,7 +63,6 @@ public class PlaceRest {
 
     @PutMapping(value = "/{id}")
     @ResponseStatus(HttpStatus.OK)
-    @ResponseBody
     public PlaceDto update(@Validated @RequestBody PlaceDto placeDto, @PathVariable("id") Long id) {
         Place place = placeService.update(
                 id,
@@ -86,14 +82,12 @@ public class PlaceRest {
     }
 
     @GetMapping(value = "/id")
-    @ResponseBody
     public List<Long> findAllIds() {
         log.debug(PLACE_CONTROLLER_LOG_GET_ALL_PLACES_IDS);
         return placeService.findAllIds();
     }
 
     @GetMapping(value = "/check")
-    @ResponseBody
     public List<Long> getNotExistPlacesIds(@RequestParam(name = "places-ids-for-check") List<Long> placesIdsForCheck) {
         log.debug(PLACE_CONTROLLER_LOG_GET_NOT_EXIST_PLACES_IDS);
         return placeService.getNotExistPlacesIds(placesIdsForCheck);
