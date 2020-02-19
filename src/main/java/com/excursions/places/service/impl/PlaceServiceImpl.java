@@ -29,10 +29,10 @@ import static com.excursions.places.log.message.PlaceServiceLogMessages.*;
 @Slf4j
 public class PlaceServiceImpl implements PlaceService {
 
-    public static final String SERVICE_NAME = "PlaceServiceImpl";
+    private static final String SERVICE_NAME = "PlaceServiceImpl";
 
-    private final String PLACE_CACHE_NAME = "placeCache";
-    private final String PLACES_CACHE_NAME = "placesCache";
+    private static final String PLACE_CACHE_NAME = "placeCache";
+    private static final String PLACES_CACHE_NAME = "placesCache";
 
     private PlaceRepository placeRepository;
     private EntityManager entityManager;
