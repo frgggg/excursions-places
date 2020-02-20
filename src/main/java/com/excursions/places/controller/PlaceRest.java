@@ -10,6 +10,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -31,12 +32,22 @@ public class PlaceRest {
 
     @GetMapping
     public List<PlaceDto> findAll() {
-        List<PlaceDto> allPlaces =  placeService.findAll()
-                .stream()
-                .map(book -> modelMapper.map(book, PlaceDto.class))
-                .collect(Collectors.toList());
+        List<Place> places =  placeService.findAll();
+        List<PlaceDto> placeDtos = null;
+        if(places != null) {
+            if(places.size() > 0) {
+                placeDtos = places
+                        .stream()
+                        .map(book -> modelMapper.map(book, PlaceDto.class))
+                        .collect(Collectors.toList());
+            }
+        }
+
+        if(placeDtos == null) {
+            placeDtos = new ArrayList<>();
+        }
         log.debug(PLACE_CONTROLLER_LOG_GET_ALL_PLACES);
-        return allPlaces;
+        return placeDtos;
     }
 
     @GetMapping(value = "/{id}")
